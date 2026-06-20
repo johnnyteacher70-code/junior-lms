@@ -1,0 +1,77 @@
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from './hooks/useAuth';
+import LoadingSpinner from './components/common/LoadingSpinner';
+import ProtectedRoute from './components/common/ProtectedRoute';
+import RoleRoute from './components/common/RoleRoute';
+import DashboardLayout from './components/layout/DashboardLayout';
+
+import LandingPage from './pages/LandingPage';
+import CoursesPage from './pages/CoursesPage';
+import CourseDetail from './pages/CourseDetail';
+import Login from './pages/auth/Login';
+import Register from './pages/auth/Register';
+
+import StudentDashboard from './pages/student/Dashboard';
+import MyCourses from './pages/student/MyCourses';
+import CourseView from './pages/student/CourseView';
+import StudentAssignments from './pages/student/Assignments';
+
+import TeacherDashboard from './pages/teacher/Dashboard';
+import TeacherMyCourses from './pages/teacher/MyCourses';
+import CourseCreate from './pages/teacher/CourseCreate';
+import CourseEdit from './pages/teacher/CourseEdit';
+import LessonManage from './pages/teacher/LessonManage';
+import AssignmentManage from './pages/teacher/AssignmentManage';
+
+import AdminDashboard from './pages/admin/Dashboard';
+import AdminUsers from './pages/admin/Users';
+import AdminCourses from './pages/admin/Courses';
+import NotFound from './pages/NotFound';
+
+const StudentLayout = ({ children }) => (
+  <RoleRoute role="student"><DashboardLayout>{children}</DashboardLayout></RoleRoute>
+);
+const TeacherLayout = ({ children }) => (
+  <RoleRoute role="teacher"><DashboardLayout>{children}</DashboardLayout></RoleRoute>
+);
+const AdminLayout = ({ children }) => (
+  <RoleRoute role="admin"><DashboardLayout>{children}</DashboardLayout></RoleRoute>
+);
+
+export default function App() {
+  const { loading } = useAuth();
+  if (loading) return <LoadingSpinner fullPage />;
+
+  return (
+    <Routes>
+      {/* Public */}
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/courses" element={<CoursesPage />} />
+      <Route path="/courses/:id" element={<CourseDetail />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+
+      {/* Student */}
+      <Route path="/student" element={<StudentLayout><StudentDashboard /></StudentLayout>} />
+      <Route path="/student/courses" element={<StudentLayout><MyCourses /></StudentLayout>} />
+      <Route path="/student/courses/:id" element={<StudentLayout><CourseView /></StudentLayout>} />
+      <Route path="/student/assignments" element={<StudentLayout><StudentAssignments /></StudentLayout>} />
+
+      {/* Teacher */}
+      <Route path="/teacher" element={<TeacherLayout><TeacherDashboard /></TeacherLayout>} />
+      <Route path="/teacher/courses" element={<TeacherLayout><TeacherMyCourses /></TeacherLayout>} />
+      <Route path="/teacher/courses/new" element={<TeacherLayout><CourseCreate /></TeacherLayout>} />
+      <Route path="/teacher/courses/:id/edit" element={<TeacherLayout><CourseEdit /></TeacherLayout>} />
+      <Route path="/teacher/courses/:id/lessons" element={<TeacherLayout><LessonManage /></TeacherLayout>} />
+      <Route path="/teacher/courses/:id/assignments" element={<TeacherLayout><AssignmentManage /></TeacherLayout>} />
+
+      {/* Admin */}
+      <Route path="/admin" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
+      <Route path="/admin/users" element={<AdminLayout><AdminUsers /></AdminLayout>} />
+      <Route path="/admin/courses" element={<AdminLayout><AdminCourses /></AdminLayout>} />
+
+      {/* 404 */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+}
