@@ -79,16 +79,15 @@ export default function AdminUsers() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <Badge color={roleColor[u.role]}>{roleLabel[u.role] || u.role}</Badge>
-                      {u.role !== 'admin' && (
                         <select
-                          value={u.role}
-                          onChange={(e) => handleRoleChange(u._id, e.target.value)}
+                          value={u.role === 'admin' ? '' : u.role}
+                          onChange={(e) => e.target.value && handleRoleChange(u._id, e.target.value)}
                           className="text-xs bg-transparent border border-gray-200 dark:border-gray-700 rounded px-1 py-0.5 text-gray-600 dark:text-gray-400 focus:outline-none focus:ring-1 focus:ring-primary-500"
                         >
+                          {u.role === 'admin' && <option value="">— tanlang —</option>}
                           <option value="student">talaba</option>
                           <option value="teacher">o'qituvchi</option>
                         </select>
-                      )}
                     </div>
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-500">{new Date(u.createdAt).toLocaleDateString()}</td>

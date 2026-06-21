@@ -28,8 +28,13 @@ exports.updateUserRole = async (req, res, next) => {
     if (!['student', 'teacher'].includes(role)) {
       return res.status(400).json({ success: false, message: 'Faqat student yoki teacher roliga o\'tkazish mumkin' });
     }
-    const user = await User.findByIdAndUpdate(req.params.id, { role }, { new: true });
+    const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    if (user._id.toString() === req.user._id.toString()) {
+      return res.status(400).json({ success: false, message: 'O\'z rolingizni o\'zgartira olmaysiz' });
+    }
+    user.role = role;
+    await user.save();
     res.json({ success: true, user });
   } catch (err) { next(err); }
 };
