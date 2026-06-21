@@ -87,7 +87,6 @@ export default function AdminUsers() {
                         >
                           <option value="student">talaba</option>
                           <option value="teacher">o'qituvchi</option>
-                          <option value="admin">admin</option>
                         </select>
                       )}
                     </div>
