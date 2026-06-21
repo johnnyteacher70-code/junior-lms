@@ -13,7 +13,12 @@ export default function AdminUsers() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
-  const load = () => { getUsers().then((r) => setUsers(r.data.users)).finally(() => setLoading(false)); };
+  const load = () => {
+    getUsers()
+      .then((r) => setUsers(r.data.users))
+      .catch(() => toast.error('Foydalanuvchilarni yuklashda xatolik'))
+      .finally(() => setLoading(false));
+  };
   useEffect(load, []);
 
   const handleRoleChange = async (id, role) => {

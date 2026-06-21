@@ -30,8 +30,8 @@ export default function CourseCreate() {
     setLoading(true);
     try {
       const r = await createCourse(form);
-      toast.success('Kurs yaratildi!');
-      navigate(`/teacher/courses/${r.data.course._id}/edit`);
+      toast.success('Kurs yaratildi! Endi darslar qo\'shishingiz mumkin.');
+      navigate(`/teacher/courses/${r.data.course._id}/lessons`);
     } catch (err) {
       toast.error(err.response?.data?.message || 'Kurs yaratishda xatolik');
     } finally {
@@ -86,7 +86,19 @@ export default function CourseCreate() {
             <Input label="Narxi ($)" type="number" min="0" step="0.01" value={form.price} onChange={set('price')} />
             <Input label="Til" value={form.language} onChange={set('language')} />
           </div>
-          <Input label="Muqova URL (ixtiyoriy)" placeholder="https://..." value={form.thumbnail} onChange={set('thumbnail')} />
+          <div>
+            <Input label="Muqova rasmi URL (ixtiyoriy)" placeholder="https://..." value={form.thumbnail} onChange={set('thumbnail')} />
+            {form.thumbnail && (
+              <div className="mt-2 rounded-lg overflow-hidden h-40 bg-gray-100 dark:bg-gray-800">
+                <img
+                  src={form.thumbnail}
+                  alt="Muqova"
+                  className="w-full h-full object-cover"
+                  onError={(e) => { e.target.style.display = 'none'; }}
+                />
+              </div>
+            )}
+          </div>
           <div className="flex gap-3 pt-2">
             <Button type="button" variant="secondary" onClick={() => navigate(-1)}>Bekor qilish</Button>
             <Button type="submit" loading={loading}>Kurs yaratish</Button>

@@ -28,7 +28,7 @@ exports.updateProgress = async (req, res, next) => {
     const { lessonId } = req.body;
     const enrollment = await Enrollment.findOne({ student: req.user._id, course: req.params.courseId });
     if (!enrollment) return res.status(404).json({ success: false, message: 'Not enrolled' });
-    if (!enrollment.completedLessons.includes(lessonId)) {
+    if (!enrollment.completedLessons.some(l => l.toString() === lessonId)) {
       enrollment.completedLessons.push(lessonId);
     }
     const totalLessons = await Lesson.countDocuments({ course: req.params.courseId });

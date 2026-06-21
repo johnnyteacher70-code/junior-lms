@@ -26,6 +26,11 @@ import AssignmentManage from './pages/teacher/AssignmentManage';
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminUsers from './pages/admin/Users';
 import AdminCourses from './pages/admin/Courses';
+import AdminGroups from './pages/admin/Groups';
+import GroupDetail from './pages/admin/GroupDetail';
+import TeacherMyGroups from './pages/teacher/MyGroups';
+import StudentMyGroup from './pages/student/MyGroup';
+import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 
 const StudentLayout = ({ children }) => (
@@ -65,10 +70,21 @@ export default function App() {
       <Route path="/teacher/courses/:id/lessons" element={<TeacherLayout><LessonManage /></TeacherLayout>} />
       <Route path="/teacher/courses/:id/assignments" element={<TeacherLayout><AssignmentManage /></TeacherLayout>} />
 
+      {/* Student */}
+      <Route path="/student/group" element={<StudentLayout><StudentMyGroup /></StudentLayout>} />
+      <Route path="/student/profile" element={<StudentLayout><Profile /></StudentLayout>} />
+
+      {/* Teacher */}
+      <Route path="/teacher/groups" element={<TeacherLayout><TeacherMyGroups /></TeacherLayout>} />
+      <Route path="/teacher/profile" element={<TeacherLayout><Profile /></TeacherLayout>} />
+
       {/* Admin */}
       <Route path="/admin" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
       <Route path="/admin/users" element={<AdminLayout><AdminUsers /></AdminLayout>} />
       <Route path="/admin/courses" element={<AdminLayout><AdminCourses /></AdminLayout>} />
+      <Route path="/admin/groups" element={<AdminLayout><AdminGroups /></AdminLayout>} />
+      <Route path="/admin/groups/:id" element={<AdminLayout><GroupDetail /></AdminLayout>} />
+      <Route path="/admin/profile" element={<AdminLayout><Profile /></AdminLayout>} />
 
       {/* 404 */}
       <Route path="*" element={<NotFound />} />

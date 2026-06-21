@@ -14,7 +14,8 @@ export default function MyCourses() {
 
   if (loading) return <LoadingSpinner />;
 
-  const filtered = enrollments.filter((e) => {
+  const valid = enrollments.filter((e) => e.course != null);
+  const filtered = valid.filter((e) => {
     if (filter === 'inprogress') return e.progress > 0 && e.progress < 100;
     if (filter === 'completed') return e.progress === 100;
     if (filter === 'notstarted') return e.progress === 0;

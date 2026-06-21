@@ -8,9 +8,10 @@ const app = express();
 
 connectDB();
 
-const allowedOrigins = process.env.CLIENT_URL
-  ? [process.env.CLIENT_URL, 'http://localhost:5173']
-  : ['http://localhost:5173'];
+const allowedOrigins = [
+  'http://localhost:5173',
+  ...(process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',').map(o => o.trim()) : []),
+];
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 app.use(morgan('dev'));
@@ -21,6 +22,7 @@ app.use('/api/lessons', require('./src/routes/lessons'));
 app.use('/api/assignments', require('./src/routes/assignments'));
 app.use('/api/enrollments', require('./src/routes/enrollments'));
 app.use('/api/admin', require('./src/routes/admin'));
+app.use('/api/groups', require('./src/routes/groups'));
 
 app.use((err, req, res, next) => {
   const status = err.statusCode || 500;

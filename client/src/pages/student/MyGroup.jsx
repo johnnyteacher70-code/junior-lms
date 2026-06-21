@@ -1,0 +1,112 @@
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { getMyGroup } from '../../api/groups';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import Badge from '../../components/ui/Badge';
+import Button from '../../components/ui/Button';
+
+export default function StudentMyGroup() {
+  const [group, setGroup]     = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getMyGroup()
+      .then(r => setGroup(r.data.group))
+      .catch(() => setGroup(null))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <LoadingSpinner />;
+
+  if (!group) return (
+    <div className="card p-16 text-center">
+      <div className="text-5xl mb-4">🏫</div>
+      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Siz hali guruhga biriktirilmagansiz</h3>
+      <p className="text-gray-500">Admin sizni guruhga qo'shgandan keyin bu yerda ko'rinadi</p>
+    </div>
+  );
+
+  return (
+    <div className="space-y-6 max-w-2xl">
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Mening guruhim</h1>
+
+      {/* Guruh kartochkasi */}
+      <div className="card overflow-hidden">
+        <div className="h-2 bg-gradient-to-r from-primary-500 to-purple-600" />
+        <div className="p-6">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-purple-600 flex items-center justify-center text-white font-extrabold text-2xl shadow-glow-sm">
+                {group.name.charAt(0)}
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">{group.name}</h2>
+                {group.description && (
+                  <p className="text-sm text-gray-500 mt-0.5">{group.description}</p>
+                )}
+              </div>
+            </div>
+            <Badge color={group.status === 'active' ? 'green' : 'gray'} dot>
+              {group.status === 'active' ? 'Faol' : 'Nofaol'}
+            </Badge>
+          </div>
+
+          {/* Onlayn kurs */}
+          {group.course && (
+            <div className="p-4 bg-primary-50 dark:bg-primary-900/20 rounded-xl mb-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">📚</span>
+                <div>
+                  <p className="text-xs font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wide">Onlayn kurs</p>
+                  <p className="font-semibold text-gray-900 dark:text-white">{group.course.title}</p>
+                </div>
+              </div>
+              <Link to={`/courses/${group.course._id}`}>
+                <Button size="sm">O'rganish →</Button>
+              </Link>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* O'qituvchi */}
+      {group.teacher && (
+        <div className="card p-5">
+          <h3 className="font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+            <span>👨‍🏫</span> O'qituvchi
+          </h3>
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center font-bold">
+              {group.teacher.name.charAt(0)}
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 dark:text-white">{group.teacher.name}</p>
+              <p className="text-sm text-gray-500">{group.teacher.email}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Guruh do'stlari */}
+      <div className="card p-5">
+        <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+          <span>🎓</span> Guruh a'zolari
+          <Badge color="primary">{group.students.length}</Badge>
+        </h3>
+        <div className="grid gap-2">
+          {group.students.map((s, i) => (
+            <div key={s._id} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/40 transition-colors">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-400 to-primary-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
+                {i + 1}
+              </div>
+              <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 flex items-center justify-center font-bold text-sm flex-shrink-0">
+                {s.name.charAt(0).toUpperCase()}
+              </div>
+              <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{s.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

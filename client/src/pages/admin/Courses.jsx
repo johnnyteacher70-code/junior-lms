@@ -12,7 +12,12 @@ export default function AdminCourses() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
-  useEffect(() => { getAdminCourses().then((r) => setCourses(r.data.courses)).finally(() => setLoading(false)); }, []);
+  useEffect(() => {
+    getAdminCourses()
+      .then((r) => setCourses(r.data.courses))
+      .catch(() => toast.error('Kurslarni yuklashda xatolik'))
+      .finally(() => setLoading(false));
+  }, []);
 
   const handleDelete = async (id) => {
     if (!confirm('Bu kurs va uning barcha mazmunini o\'chirasizmi?')) return;

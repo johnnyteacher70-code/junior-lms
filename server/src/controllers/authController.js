@@ -34,3 +34,34 @@ exports.login = async (req, res, next) => {
 exports.getMe = async (req, res) => {
   res.json({ success: true, user: req.user });
 };
+
+exports.updateProfile = async (req, res, next) => {
+  try {
+    const { name, bio, avatar } = req.body;
+    const allowed = {};
+    if (name) allowed.name = name.trim();
+    if (bio !== undefined) allowed.bio = bio;
+    if (avatar !== undefined) allowed.avatar = avatar;
+    const user = await User.findByIdAndUpdate(req.user._id, allowed, { new: true, runValidators: true });
+    res.json({ success: true, user });
+  } catch (err) { next(err); }
+};
+
+exports.changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Joriy va yangi parolni kiriting' });
+    }
+    if (newPassword.length < 6) {
+      return res.status(400).json({ success: false, message: 'Yangi parol kamida 6 ta belgi bo\'lishi kerak' });
+    }
+    const user = await User.findById(req.user._id).select('+password');
+    if (!(await user.matchPassword(currentPassword))) {
+      return res.status(401).json({ success: false, message: 'Joriy parol noto\'g\'ri' });
+    }
+    user.password = newPassword;
+    await user.save();
+    res.json({ success: true, message: 'Parol muvaffaqiyatli o\'zgartirildi' });
+  } catch (err) { next(err); }
+};

@@ -15,9 +15,10 @@ export default function StudentDashboard() {
 
   if (loading) return <LoadingSpinner />;
 
-  const inProgress = enrollments.filter((e) => e.progress > 0 && e.progress < 100);
-  const completed = enrollments.filter((e) => e.progress === 100);
-  const notStarted = enrollments.filter((e) => e.progress === 0);
+  const valid = enrollments.filter((e) => e.course != null);
+  const inProgress = valid.filter((e) => e.progress > 0 && e.progress < 100);
+  const completed = valid.filter((e) => e.progress === 100);
+  const notStarted = valid.filter((e) => e.progress === 0);
 
   return (
     <div className="space-y-8">
@@ -25,7 +26,7 @@ export default function StudentDashboard() {
       <div className="bg-gradient-to-br from-primary-600 to-purple-700 rounded-2xl p-6 text-white">
         <h1 className="text-2xl font-bold mb-1">Xush kelibsiz, {user.name}! 👋</h1>
         <p className="text-white/70">O'rganishingizni to'xtatgan joyingizdan davom eting.</p>
-        {enrollments.length > 0 && (
+        {valid.length > 0 && (
           <div className="flex gap-6 mt-5 pt-5 border-t border-white/20">
             <div><p className="text-2xl font-bold">{enrollments.length}</p><p className="text-white/70 text-sm">Yozilgan</p></div>
             <div><p className="text-2xl font-bold">{inProgress.length}</p><p className="text-white/70 text-sm">Jarayonda</p></div>
@@ -115,7 +116,7 @@ export default function StudentDashboard() {
       )}
 
       {/* Empty state */}
-      {enrollments.length === 0 && (
+      {valid.length === 0 && (
         <div className="card p-16 text-center">
           <div className="w-20 h-20 bg-primary-50 dark:bg-primary-900/20 rounded-2xl flex items-center justify-center mx-auto mb-5">
             <svg className="w-10 h-10 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
