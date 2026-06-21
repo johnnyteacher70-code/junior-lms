@@ -5,24 +5,35 @@ import { useAuth } from '../../hooks/useAuth';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 
-const roleLabels = { student: 'Talaba', teacher: 'O\'qituvchi' };
+const roleLabels = { student: 'Talaba', teacher: "O'qituvchi", admin: 'Administrator' };
 
 export default function Register() {
-  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'student' });
+  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'student', adminCode: '' });
   const [loading, setLoading] = useState(false);
+  const [showAdminCode, setShowAdminCode] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
 
+  const handleRoleSelect = (r) => {
+    if (r === 'admin') {
+      setShowAdminCode(true);
+    } else {
+      setShowAdminCode(false);
+    }
+    setForm({ ...form, role: r, adminCode: '' });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.password.length < 6) return toast.error('Parol kamida 6 ta belgidan iborat bo\'lishi kerak');
+    if (form.password.length < 6) return toast.error("Parol kamida 6 ta belgidan iborat bo'lishi kerak");
+    if (form.role === 'admin' && !form.adminCode) return toast.error("Admin kodi kiritilmagan");
     setLoading(true);
     try {
       const user = await register(form);
       toast.success(`Hisob yaratildi! Xush kelibsiz, ${user.name}!`);
       navigate(`/${user.role}`);
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Ro\'yxatdan o\'tish muvaffaqiyatsiz bo\'ldi');
+      toast.error(err.response?.data?.message || "Ro'yxatdan o'tish muvaffaqiyatsiz bo'ldi");
     } finally {
       setLoading(false);
     }
@@ -42,7 +53,7 @@ export default function Register() {
           <div className="mt-8 grid grid-cols-2 gap-4">
             {[
               { title: 'Talaba sifatida', desc: 'Kurslarga yoziling, rivojlanishni kuzating, topshiriqlar yuboring' },
-              { title: 'O\'qituvchi sifatida', desc: 'Kurslar yarating, darslarni boshqaring, talabalarni baholang' },
+              { title: "O'qituvchi sifatida", desc: 'Kurslar yarating, darslarni boshqaring, talabalarni baholang' },
             ].map((r) => (
               <div key={r.title} className="bg-white/10 rounded-xl p-4">
                 <p className="font-semibold">{r.title}</p>
@@ -94,14 +105,17 @@ export default function Register() {
                 required
               />
 
-              <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Quyidagi sifatida ro'yxatdan o'tmoqchiman</label>
+              {/* Rol tanlash */}
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Quyidagi sifatida ro'yxatdan o'tmoqchiman
+                </label>
                 <div className="grid grid-cols-2 gap-3">
                   {['student', 'teacher'].map((r) => (
                     <button
                       key={r}
                       type="button"
-                      onClick={() => setForm({ ...form, role: r })}
+                      onClick={() => handleRoleSelect(r)}
                       className={`py-3 px-4 rounded-lg border-2 text-sm font-medium transition-colors ${
                         form.role === r
                           ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400'
@@ -112,10 +126,42 @@ export default function Register() {
                     </button>
                   ))}
                 </div>
+
+                {/* Admin tugmasi — kichik, ko'zga tashlanmaydi */}
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => handleRoleSelect(form.role === 'admin' ? 'student' : 'admin')}
+                    className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
+                      form.role === 'admin'
+                        ? 'border-gray-700 bg-gray-800 text-gray-300 dark:border-gray-500'
+                        : 'border-gray-200 dark:border-gray-700 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                    }`}
+                  >
+                    {form.role === 'admin' ? '✕ Adminni bekor qilish' : 'Administrator'}
+                  </button>
+                </div>
               </div>
 
+              {/* Admin kodi (faqat admin tanlanganda) */}
+              {form.role === 'admin' && (
+                <div className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
+                  <Input
+                    label="Admin kodi"
+                    type="password"
+                    placeholder="Maxfiy kod..."
+                    value={form.adminCode}
+                    onChange={(e) => setForm({ ...form, adminCode: e.target.value })}
+                    required
+                  />
+                  <p className="text-xs text-gray-400 mt-1">
+                    Admin kodi faqat vakolatli shaxslarga beriladi
+                  </p>
+                </div>
+              )}
+
               <Button type="submit" className="w-full" size="lg" loading={loading}>
-                Hisob yaratish
+                {form.role === 'admin' ? 'Admin hisob yaratish' : 'Hisob yaratish'}
               </Button>
             </form>
           </div>
