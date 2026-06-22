@@ -25,6 +25,7 @@ import AssignmentManage from './pages/teacher/AssignmentManage';
 
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminUsers from './pages/admin/Users';
+import AdminUserDetail from './pages/admin/UserDetail';
 import AdminCourses from './pages/admin/Courses';
 import AdminGroups from './pages/admin/Groups';
 import GroupDetail from './pages/admin/GroupDetail';
@@ -81,6 +82,7 @@ export default function App() {
       {/* Admin */}
       <Route path="/admin" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
       <Route path="/admin/users" element={<AdminLayout><AdminUsers /></AdminLayout>} />
+      <Route path="/admin/users/:id" element={<AdminLayout><AdminUserDetail /></AdminLayout>} />
       <Route path="/admin/courses" element={<AdminLayout><AdminCourses /></AdminLayout>} />
       <Route path="/admin/groups" element={<AdminLayout><AdminGroups /></AdminLayout>} />
       <Route path="/admin/groups/:id" element={<AdminLayout><GroupDetail /></AdminLayout>} />

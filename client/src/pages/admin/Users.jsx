@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { getUsers, updateUserRole, deleteUser } from '../../api/admin';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
@@ -12,6 +13,7 @@ export default function AdminUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const navigate = useNavigate();
 
   const load = () => {
     getUsers()
@@ -70,9 +72,12 @@ export default function AdminUsers() {
               {filtered.map((u) => (
                 <tr key={u._id} className="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
                   <td className="px-4 py-3">
-                    <div className="flex items-center gap-3">
+                    <div
+                      className="flex items-center gap-3 cursor-pointer group"
+                      onClick={() => navigate(`/admin/users/${u._id}`)}
+                    >
                       <div className="w-8 h-8 rounded-full bg-primary-600 text-white text-sm flex items-center justify-center font-medium flex-shrink-0">{u.name.charAt(0).toUpperCase()}</div>
-                      <span className="font-medium text-gray-900 dark:text-white text-sm">{u.name}</span>
+                      <span className="font-medium text-gray-900 dark:text-white text-sm group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">{u.name}</span>
                     </div>
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{u.email}</td>

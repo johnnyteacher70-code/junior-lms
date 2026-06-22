@@ -15,6 +15,33 @@ exports.getStats = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
+exports.getUserDetail = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password');
+    if (!user) return res.status(404).json({ success: false, message: 'Foydalanuvchi topilmadi' });
+
+    if (user.role === 'student') {
+      const enrollments = await Enrollment.find({ student: user._id })
+        .populate({ path: 'course', select: 'title thumbnail category level price status' })
+        .sort('-enrolledAt');
+      return res.json({ success: true, user, enrollments });
+    }
+
+    if (user.role === 'teacher') {
+      const courses = await Course.find({ instructor: user._id })
+        .select('title thumbnail category level status totalStudents createdAt')
+        .sort('-createdAt');
+      const Lesson = require('../models/Lesson');
+      const courseIds = courses.map(c => c._id);
+      const lessonCount = await Lesson.countDocuments({ course: { $in: courseIds } });
+      const totalStudents = courses.reduce((sum, c) => sum + c.totalStudents, 0);
+      return res.json({ success: true, user, courses, lessonCount, totalStudents });
+    }
+
+    res.json({ success: true, user });
+  } catch (err) { next(err); }
+};
+
 exports.getUsers = async (req, res, next) => {
   try {
     const users = await User.find().sort('-createdAt');
