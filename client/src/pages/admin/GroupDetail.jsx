@@ -144,22 +144,21 @@ export default function GroupDetail() {
             <h3 className="font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
               <span className="text-lg">✈️</span> Telegram guruh
             </h3>
-            <div className="flex gap-2">
-              <input
-                type="url"
-                value={telegramLink}
-                onChange={e => setTelegramLink(e.target.value)}
-                placeholder="https://t.me/guruh_nomi"
-                className="flex-1 px-3 py-2.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500"
-              />
-              <Button
-                size="sm"
-                onClick={() => handleUpdate('telegramLink', telegramLink)}
-                loading={saving}
-              >
-                Saqlash
-              </Button>
-            </div>
+            <input
+              type="url"
+              value={telegramLink}
+              onChange={e => setTelegramLink(e.target.value)}
+              placeholder="https://t.me/guruh_nomi"
+              className="w-full px-3 py-2.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 mb-2"
+            />
+            <button
+              onClick={() => handleUpdate('telegramLink', telegramLink)}
+              disabled={saving}
+              className="w-full py-2.5 rounded-xl bg-blue-500 hover:bg-blue-600 active:scale-[0.98] text-white text-sm font-semibold transition-all disabled:opacity-60 flex items-center justify-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.28 13.604l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.868.955z"/></svg>
+              {saving ? 'Saqlanmoqda...' : 'Telegram linkni saqlash'}
+            </button>
             {group.telegramLink && (
               <a
                 href={group.telegramLink}
@@ -167,8 +166,8 @@ export default function GroupDetail() {
                 rel="noopener noreferrer"
                 className="mt-2 inline-flex items-center gap-1.5 text-xs text-blue-500 hover:underline"
               >
-                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.28 13.604l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.868.955z"/></svg>
-                Guruhni ochish
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.28 13.604l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.868.955z"/></svg>
+                Telegram guruhni ochish →
               </a>
             )}
           </div>
