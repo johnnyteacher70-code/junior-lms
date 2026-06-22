@@ -21,6 +21,7 @@ export default function GroupDetail() {
   const [available, setAvailable] = useState([]);
   const [addModal, setAddModal] = useState(false);
   const [saving, setSaving]     = useState(false);
+  const [telegramLink, setTelegramLink] = useState('');
 
   const load = async () => {
     try {
@@ -30,6 +31,7 @@ export default function GroupDetail() {
         getCourses({ status: 'published' }),
       ]);
       setGroup(gRes.data.group);
+      setTelegramLink(gRes.data.group.telegramLink || '');
       setTeachers(tRes.data.teachers);
       setCourses(cRes.data.courses);
     } catch { toast.error('Guruh topilmadi'); navigate('/admin/groups'); }
@@ -142,14 +144,22 @@ export default function GroupDetail() {
             <h3 className="font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
               <span className="text-lg">✈️</span> Telegram guruh
             </h3>
-            <input
-              type="url"
-              value={group.telegramLink || ''}
-              onChange={e => setGroup(prev => ({ ...prev, telegramLink: e.target.value }))}
-              onBlur={e => e.target.value !== (group.telegramLink || '') && handleUpdate('telegramLink', e.target.value)}
-              placeholder="https://t.me/guruh_nomi"
-              className="w-full px-3 py-2.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500"
-            />
+            <div className="flex gap-2">
+              <input
+                type="url"
+                value={telegramLink}
+                onChange={e => setTelegramLink(e.target.value)}
+                placeholder="https://t.me/guruh_nomi"
+                className="flex-1 px-3 py-2.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500"
+              />
+              <Button
+                size="sm"
+                onClick={() => handleUpdate('telegramLink', telegramLink)}
+                loading={saving}
+              >
+                Saqlash
+              </Button>
+            </div>
             {group.telegramLink && (
               <a
                 href={group.telegramLink}
