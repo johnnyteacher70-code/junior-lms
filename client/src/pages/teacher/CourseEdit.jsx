@@ -86,7 +86,7 @@ export default function CourseEdit() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl">
+      <div className="flex gap-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl overflow-x-auto">
         {tabs.map((t) => (
           <button
             key={t.key}
@@ -95,7 +95,7 @@ export default function CourseEdit() {
               else if (t.key === 'assignments') navigate(`/teacher/courses/${id}/assignments`);
               else setActiveTab(t.key);
             }}
-            className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all ${
+            className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
               activeTab === t.key && t.key === 'info'
                 ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'

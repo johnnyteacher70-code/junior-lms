@@ -58,7 +58,7 @@ export default function CourseDetail() {
     <div className="min-h-screen bg-white dark:bg-gray-950">
       <Navbar />
       <div className="bg-gray-900 text-white py-12">
-        <div className="max-w-6xl mx-auto px-4 grid lg:grid-cols-3 gap-8">
+        <div className="max-w-6xl mx-auto px-4 flex flex-col-reverse lg:grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-4">
               <Badge color={levelColor[course.level]}>{levelLabel[course.level] || course.level}</Badge>

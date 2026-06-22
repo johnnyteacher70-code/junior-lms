@@ -38,11 +38,11 @@ export default function LandingPage() {
           <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full -translate-x-1/2 -translate-y-1/2" />
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-300 rounded-full translate-x-1/3 translate-y-1/3" />
         </div>
-        <div className="relative max-w-6xl mx-auto px-4 py-24 lg:py-36 text-center">
+        <div className="relative max-w-6xl mx-auto px-4 py-16 sm:py-24 lg:py-36 text-center">
           <span className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm text-white text-sm font-medium px-4 py-1.5 rounded-full mb-6 border border-white/20">
             🚀 Zamonaviy ta'lim platformasi
           </span>
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 tracking-tight">
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold leading-tight mb-6 tracking-tight">
             Cheksiz<br />
             <span className="text-yellow-300">O'rganish</span>
           </h1>
@@ -63,11 +63,11 @@ export default function LandingPage() {
           </div>
 
           {/* Stats */}
-          <div className="flex items-center justify-center gap-10 mt-16 pt-10 border-t border-white/20">
-            {[['10K+', 'Talabalar'], ['500+', 'Kurslar'], ['200+', 'O\'qituvchilar'], ['95%', 'Mamnuniyat']].map(([n, l]) => (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-14 pt-10 border-t border-white/20">
+            {[['10K+', 'Talabalar'], ['500+', 'Kurslar'], ['200+', "O'qituvchilar"], ['95%', 'Mamnuniyat']].map(([n, l]) => (
               <div key={l} className="text-center">
-                <p className="text-3xl font-extrabold text-white">{n}</p>
-                <p className="text-sm text-white/70 mt-0.5">{l}</p>
+                <p className="text-2xl sm:text-3xl font-extrabold text-white">{n}</p>
+                <p className="text-xs sm:text-sm text-white/70 mt-0.5">{l}</p>
               </div>
             ))}
           </div>
@@ -95,7 +95,7 @@ export default function LandingPage() {
       <section className="py-20 lg:py-28">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-14">
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Nega Junior-ni tanlash kerak?</h2>
+            <h2 className="text-2xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Nega Junior-ni tanlash kerak?</h2>
             <p className="text-gray-500 dark:text-gray-400 text-lg max-w-xl mx-auto">Professional o'sish uchun kerak bo'lgan hamma narsa.</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -114,13 +114,13 @@ export default function LandingPage() {
       {courses.length > 0 && (
         <section className="py-20 bg-gray-50 dark:bg-gray-900">
           <div className="max-w-6xl mx-auto px-4">
-            <div className="flex items-end justify-between mb-10">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-10">
               <div>
-                <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Tavsiya etilgan kurslar</h2>
-                <p className="text-gray-500 dark:text-gray-400 mt-2">Eng yaxshi o'qituvchilarimizdan tanlangan kurslar</p>
+                <h2 className="text-2xl sm:text-4xl font-bold text-gray-900 dark:text-white">Tavsiya etilgan kurslar</h2>
+                <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm sm:text-base">Eng yaxshi o'qituvchilarimizdan tanlangan kurslar</p>
               </div>
-              <Link to="/courses" className="text-primary-600 dark:text-primary-400 hover:underline text-sm font-semibold flex items-center gap-1">
-                Barchasini ko'rish <span>→</span>
+              <Link to="/courses" className="text-primary-600 dark:text-primary-400 hover:underline text-sm font-semibold flex items-center gap-1 flex-shrink-0">
+                Barchasini ko'rish →
               </Link>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -138,7 +138,7 @@ export default function LandingPage() {
       <section className="py-20 lg:py-28">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-14">
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Qanday ishlaydi</h2>
+            <h2 className="text-2xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Qanday ishlaydi</h2>
             <p className="text-gray-500 dark:text-gray-400 text-lg">Yo'lingizni boshlash uchun uch oddiy qadam</p>
           </div>
           <div className="grid sm:grid-cols-3 gap-8 relative">
@@ -159,8 +159,8 @@ export default function LandingPage() {
       {/* CTA Banner */}
       <section className="py-20 bg-gradient-to-br from-primary-600 to-purple-700 text-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold mb-4">O'rganishni boshlashga tayyormisiz?</h2>
-          <p className="text-white/80 text-lg mb-10">10,000 dan ortiq talabalar allaqachon Junior da o'rganmoqda.</p>
+          <h2 className="text-2xl sm:text-4xl font-bold mb-4">O'rganishni boshlashga tayyormisiz?</h2>
+          <p className="text-white/80 text-base sm:text-lg mb-8">10,000 dan ortiq talabalar allaqachon Junior da o'rganmoqda.</p>
           <div className="flex gap-4 justify-center flex-col sm:flex-row">
             <Link to="/register">
               <Button variant="white" size="lg" className="px-10 shadow-xl">Bepul boshlang</Button>
