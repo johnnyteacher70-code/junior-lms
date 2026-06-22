@@ -7,12 +7,87 @@ import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 
 const roleColor = { student: 'blue', teacher: 'purple', admin: 'red' };
-const roleLabel = { student: 'Talaba', teacher: 'O\'qituvchi', admin: 'Admin' };
+const roleLabel = { student: 'Talaba', teacher: "O'qituvchi", admin: 'Admin' };
+
+const TABS = [
+  { key: 'teacher', label: "O'qituvchilar", icon: '👨‍🏫' },
+  { key: 'student', label: 'O\'quvchilar', icon: '🎓' },
+  { key: 'admin',   label: 'Adminlar',      icon: '🛡️' },
+];
+
+function UserTable({ users, search, onNavigate, onRoleChange, onDelete }) {
+  const filtered = users.filter((u) =>
+    u.name.toLowerCase().includes(search.toLowerCase()) ||
+    u.email.toLowerCase().includes(search.toLowerCase())
+  );
+
+  if (!filtered.length) {
+    return (
+      <div className="py-16 text-center text-gray-400">
+        <p className="text-4xl mb-3">👤</p>
+        <p className="text-sm">{search ? 'Qidiruv bo\'yicha hech kim topilmadi' : 'Bu bo\'limda foydalanuvchilar yo\'q'}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[580px]">
+        <thead className="bg-gray-50 dark:bg-gray-800/50">
+          <tr>
+            {['Foydalanuvchi', 'Elektron pochta', 'Rol', "Qo'shilgan", 'Amallar'].map((h) => (
+              <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+          {filtered.map((u) => (
+            <tr key={u._id} className="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
+              <td className="px-4 py-3">
+                <div className="flex items-center gap-3 cursor-pointer group" onClick={() => onNavigate(u._id)}>
+                  <div className="w-8 h-8 rounded-full bg-primary-600 text-white text-sm flex items-center justify-center font-semibold flex-shrink-0">
+                    {u.name.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="font-medium text-sm text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                    {u.name}
+                  </span>
+                </div>
+              </td>
+              <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{u.email}</td>
+              <td className="px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <Badge color={roleColor[u.role]}>{roleLabel[u.role] || u.role}</Badge>
+                  {u.role !== 'admin' && (
+                    <select
+                      value={u.role}
+                      onChange={(e) => onRoleChange(u._id, e.target.value)}
+                      className="text-xs bg-transparent border border-gray-200 dark:border-gray-700 rounded px-1 py-0.5 text-gray-600 dark:text-gray-400 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                    >
+                      <option value="student">talaba</option>
+                      <option value="teacher">o'qituvchi</option>
+                    </select>
+                  )}
+                </div>
+              </td>
+              <td className="px-4 py-3 text-sm text-gray-500">{new Date(u.createdAt).toLocaleDateString()}</td>
+              <td className="px-4 py-3">
+                {u.role !== 'admin' && (
+                  <Button size="sm" variant="danger" onClick={() => onDelete(u._id)}>O'chirish</Button>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 export default function AdminUsers() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers]   = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [activeTab, setActiveTab] = useState('teacher');
   const navigate = useNavigate();
 
   const load = () => {
@@ -32,84 +107,74 @@ export default function AdminUsers() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Bu foydalanuvchini o\'chirasizmi?')) return;
+    if (!confirm("Bu foydalanuvchini o'chirasizmi?")) return;
     try {
       await deleteUser(id);
       setUsers((prev) => prev.filter((u) => u._id !== id));
-      toast.success('Foydalanuvchi o\'chirildi');
+      toast.success("Foydalanuvchi o'chirildi");
     } catch (err) { toast.error(err.response?.data?.message || 'Xatolik yuz berdi'); }
   };
 
   if (loading) return <LoadingSpinner />;
 
-  const filtered = users.filter((u) =>
-    u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase())
-  );
+  const teachers = users.filter(u => u.role === 'teacher');
+  const students = users.filter(u => u.role === 'student');
+  const admins   = users.filter(u => u.role === 'admin');
+  const counts   = { teacher: teachers.length, student: students.length, admin: admins.length };
+  const tabUsers = { teacher: teachers, student: students, admin: admins };
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Foydalanuvchilar ({users.length})</h1>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Foydalanuvchilar</h1>
+          <p className="text-sm text-gray-500 mt-0.5">
+            Jami: {users.length} ta · {teachers.length} o'qituvchi · {students.length} o'quvchi
+          </p>
+        </div>
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Ism yoki elektron pochta bo'yicha qidirish..."
+          placeholder="Ism yoki email bo'yicha qidirish..."
           className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 w-full sm:w-64"
         />
       </div>
 
+      {/* Tabs */}
+      <div className="flex gap-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl w-fit">
+        {TABS.map((t) => (
+          <button
+            key={t.key}
+            onClick={() => { setActiveTab(t.key); setSearch(''); }}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              activeTab === t.key
+                ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+            }`}
+          >
+            <span>{t.icon}</span>
+            <span>{t.label}</span>
+            <span className={`text-xs px-1.5 py-0.5 rounded-full font-semibold ${
+              activeTab === t.key
+                ? 'bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-400'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-500'
+            }`}>
+              {counts[t.key]}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {/* Table */}
       <div className="card overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[640px]">
-            <thead className="bg-gray-50 dark:bg-gray-800/50">
-              <tr>
-                {['Foydalanuvchi', 'Elektron pochta', 'Rol', 'Qo\'shilgan', 'Amallar'].map((h) => (
-                  <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-              {filtered.map((u) => (
-                <tr key={u._id} className="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
-                  <td className="px-4 py-3">
-                    <div
-                      className="flex items-center gap-3 cursor-pointer group"
-                      onClick={() => navigate(`/admin/users/${u._id}`)}
-                    >
-                      <div className="w-8 h-8 rounded-full bg-primary-600 text-white text-sm flex items-center justify-center font-medium flex-shrink-0">{u.name.charAt(0).toUpperCase()}</div>
-                      <span className="font-medium text-gray-900 dark:text-white text-sm group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">{u.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">{u.email}</td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <Badge color={roleColor[u.role]}>{roleLabel[u.role] || u.role}</Badge>
-                      {u.role !== 'admin' && (
-                        <select
-                          value={u.role}
-                          onChange={(e) => handleRoleChange(u._id, e.target.value)}
-                          className="text-xs bg-transparent border border-gray-200 dark:border-gray-700 rounded px-1 py-0.5 text-gray-600 dark:text-gray-400 focus:outline-none focus:ring-1 focus:ring-primary-500"
-                        >
-                          <option value="student">talaba</option>
-                          <option value="teacher">o'qituvchi</option>
-                        </select>
-                      )}
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-500">{new Date(u.createdAt).toLocaleDateString()}</td>
-                  <td className="px-4 py-3">
-                    {u.role !== 'admin' && (
-                      <Button size="sm" variant="danger" onClick={() => handleDelete(u._id)}>O'chirish</Button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {filtered.length === 0 && (
-          <p className="text-center text-gray-500 py-8 text-sm">Foydalanuvchilar topilmadi.</p>
-        )}
+        <UserTable
+          users={tabUsers[activeTab]}
+          search={search}
+          onNavigate={(id) => navigate(`/admin/users/${id}`)}
+          onRoleChange={handleRoleChange}
+          onDelete={handleDelete}
+        />
       </div>
     </div>
   );
