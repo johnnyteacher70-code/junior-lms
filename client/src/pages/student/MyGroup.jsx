@@ -78,25 +78,37 @@ export default function StudentMyGroup() {
           </div>
 
           {/* Telegram */}
-          {group.telegramLink && (
-            <a
-              href={group.telegramLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl mb-4 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.28 13.604l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.868.955z"/></svg>
+          <div className="mb-4">
+            {group.telegramLink ? (
+              <a
+                href={group.telegramLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.28 13.604l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.868.955z"/></svg>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wide">Telegram guruh</p>
+                    <p className="font-semibold text-gray-900 dark:text-white text-sm">Guruhga qo'shiling →</p>
+                  </div>
+                </div>
+                <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+              </a>
+            ) : (
+              <div className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
+                <div className="w-10 h-10 rounded-xl bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.28 13.604l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.868.955z"/></svg>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wide">Telegram guruh</p>
-                  <p className="font-semibold text-gray-900 dark:text-white text-sm">Guruhga qo'shiling</p>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Telegram guruh</p>
+                  <p className="text-sm text-gray-400">Havola hali qo'shilmagan</p>
                 </div>
               </div>
-              <svg className="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-            </a>
-          )}
+            )}
+          </div>
 
           {/* Onlayn kurs */}
           {group.course && (
