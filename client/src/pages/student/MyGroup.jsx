@@ -6,15 +6,29 @@ import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 
 export default function StudentMyGroup() {
-  const [group, setGroup]     = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [group, setGroup]         = useState(null);
+  const [loading, setLoading]     = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    getMyGroup()
+  const fetchGroup = (showSpinner = true) => {
+    if (showSpinner) setLoading(true);
+    return getMyGroup()
       .then(r => setGroup(r.data.group))
       .catch(() => setGroup(null))
-      .finally(() => setLoading(false));
+      .finally(() => { setLoading(false); setRefreshing(false); });
+  };
+
+  useEffect(() => {
+    fetchGroup();
+    const onFocus = () => fetchGroup(false);
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
   }, []);
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchGroup(false);
+  };
 
   if (loading) return <LoadingSpinner />;
 
@@ -28,7 +42,19 @@ export default function StudentMyGroup() {
 
   return (
     <div className="space-y-6 max-w-2xl">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Mening guruhim</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Mening guruhim</h1>
+        <button
+          onClick={handleRefresh}
+          disabled={refreshing}
+          className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-primary-600 transition-colors px-3 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+        >
+          <svg className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          Yangilash
+        </button>
+      </div>
 
       {/* Guruh kartochkasi */}
       <div className="card overflow-hidden">
