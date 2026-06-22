@@ -1,9 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { getCourses } from '../api/courses';
 import Navbar from '../components/layout/Navbar';
 import CourseCard from '../components/common/CourseCard';
 import Button from '../components/ui/Button';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const features = [
   { icon: '🎓', title: 'Mutaxassis o\'qituvchilar', desc: 'Amaliy tajribaga ega soha mutaxassislaridan o\'rganing.' },
@@ -23,9 +27,70 @@ const categoryValues = ['Web Development', 'Data Science', 'Design', 'Business',
 
 export default function LandingPage() {
   const [courses, setCourses] = useState([]);
+  const heroRef     = useRef(null);
+  const badgeRef    = useRef(null);
+  const titleRef    = useRef(null);
+  const subtitleRef = useRef(null);
+  const btnsRef     = useRef(null);
+  const statsRef    = useRef(null);
+  const featuresRef = useRef(null);
+  const stepsRef    = useRef(null);
+  const ctaRef      = useRef(null);
 
   useEffect(() => {
     getCourses({ status: 'published' }).then((r) => setCourses(r.data.courses.slice(0, 6))).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Hero entrance — staggered from bottom
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      tl.fromTo(badgeRef.current,    { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6 })
+        .fromTo(titleRef.current,    { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.7 }, '-=0.3')
+        .fromTo(subtitleRef.current, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6 }, '-=0.4')
+        .fromTo(btnsRef.current,     { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5 }, '-=0.3')
+        .fromTo(statsRef.current?.children ? Array.from(statsRef.current.children) : [],
+          { opacity: 0, y: 20, scale: 0.9 },
+          { opacity: 1, y: 0, scale: 1, stagger: 0.1, duration: 0.5 }, '-=0.2');
+
+      // Features — scroll trigger
+      if (featuresRef.current) {
+        gsap.fromTo(
+          featuresRef.current.children,
+          { opacity: 0, y: 60, scale: 0.95 },
+          {
+            opacity: 1, y: 0, scale: 1, stagger: 0.12, duration: 0.6, ease: 'power2.out',
+            scrollTrigger: { trigger: featuresRef.current, start: 'top 80%' },
+          }
+        );
+      }
+
+      // Steps
+      if (stepsRef.current) {
+        gsap.fromTo(
+          stepsRef.current.children,
+          { opacity: 0, x: -40 },
+          {
+            opacity: 1, x: 0, stagger: 0.15, duration: 0.6, ease: 'power2.out',
+            scrollTrigger: { trigger: stepsRef.current, start: 'top 80%' },
+          }
+        );
+      }
+
+      // CTA
+      if (ctaRef.current) {
+        gsap.fromTo(
+          ctaRef.current,
+          { opacity: 0, scale: 0.96 },
+          {
+            opacity: 1, scale: 1, duration: 0.7, ease: 'power2.out',
+            scrollTrigger: { trigger: ctaRef.current, start: 'top 85%' },
+          }
+        );
+      }
+    });
+
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -39,17 +104,17 @@ export default function LandingPage() {
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-300 rounded-full translate-x-1/3 translate-y-1/3" />
         </div>
         <div className="relative max-w-6xl mx-auto px-4 py-16 sm:py-24 lg:py-36 text-center">
-          <span className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm text-white text-sm font-medium px-4 py-1.5 rounded-full mb-6 border border-white/20">
+          <span ref={badgeRef} className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm text-white text-sm font-medium px-4 py-1.5 rounded-full mb-6 border border-white/20">
             🚀 Zamonaviy ta'lim platformasi
           </span>
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold leading-tight mb-6 tracking-tight">
+          <h1 ref={titleRef} className="text-4xl sm:text-5xl lg:text-7xl font-extrabold leading-tight mb-6 tracking-tight">
             Cheksiz<br />
             <span className="text-yellow-300">O'rganish</span>
           </h1>
-          <p className="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p ref={subtitleRef} className="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed">
             <strong>Junior</strong> platformasida minglab o'quvchilar va o'qituvchilarga qo'shiling — online ta'lim uchun zamonaviy platforma.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div ref={btnsRef} className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/register">
               <Button variant="white" size="lg" className="px-8 shadow-xl">
                 Bepul boshlang →
@@ -63,7 +128,7 @@ export default function LandingPage() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-14 pt-10 border-t border-white/20">
+          <div ref={statsRef} className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-14 pt-10 border-t border-white/20">
             {[['10K+', 'Talabalar'], ['500+', 'Kurslar'], ['200+', "O'qituvchilar"], ['95%', 'Mamnuniyat']].map(([n, l]) => (
               <div key={l} className="text-center">
                 <p className="text-2xl sm:text-3xl font-extrabold text-white">{n}</p>
@@ -98,7 +163,7 @@ export default function LandingPage() {
             <h2 className="text-2xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Nega Junior-ni tanlash kerak?</h2>
             <p className="text-gray-500 dark:text-gray-400 text-lg max-w-xl mx-auto">Professional o'sish uchun kerak bo'lgan hamma narsa.</p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div ref={featuresRef} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((f) => (
               <div key={f.title} className="group bg-white dark:bg-gray-800/60 rounded-2xl p-7 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
                 <div className="text-4xl mb-5">{f.icon}</div>
@@ -141,7 +206,7 @@ export default function LandingPage() {
             <h2 className="text-2xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Qanday ishlaydi</h2>
             <p className="text-gray-500 dark:text-gray-400 text-lg">Yo'lingizni boshlash uchun uch oddiy qadam</p>
           </div>
-          <div className="grid sm:grid-cols-3 gap-8 relative">
+          <div ref={stepsRef} className="grid sm:grid-cols-3 gap-8 relative">
             <div className="hidden sm:block absolute top-8 left-1/3 right-1/3 h-0.5 bg-gradient-to-r from-primary-200 to-purple-200 dark:from-primary-900 dark:to-purple-900" />
             {steps.map((s) => (
               <div key={s.step} className="text-center relative">
@@ -158,7 +223,7 @@ export default function LandingPage() {
 
       {/* CTA Banner */}
       <section className="py-20 bg-gradient-to-br from-primary-600 to-purple-700 text-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
+        <div ref={ctaRef} className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-2xl sm:text-4xl font-bold mb-4">O'rganishni boshlashga tayyormisiz?</h2>
           <p className="text-white/80 text-base sm:text-lg mb-8">10,000 dan ortiq talabalar allaqachon Junior da o'rganmoqda.</p>
           <div className="flex gap-4 justify-center flex-col sm:flex-row">
