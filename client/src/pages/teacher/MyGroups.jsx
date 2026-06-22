@@ -53,6 +53,18 @@ export default function TeacherMyGroups() {
                 <p className="text-sm text-gray-500 dark:text-gray-400">{g.description}</p>
               )}
 
+              {g.telegramLink && (
+                <a
+                  href={g.telegramLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg text-xs font-medium hover:bg-blue-100 transition-colors"
+                >
+                  <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.28 13.604l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.868.955z"/></svg>
+                  Telegram guruh
+                </a>
+              )}
+
               {/* Talabalar */}
               <div>
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">

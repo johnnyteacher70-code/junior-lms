@@ -6,7 +6,8 @@ const groupSchema = new mongoose.Schema({
   teacher:     { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
   students:    [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   course:      { type: mongoose.Schema.Types.ObjectId, ref: 'Course', default: null },
-  status:      { type: String, enum: ['active', 'inactive'], default: 'active' },
+  status:        { type: String, enum: ['active', 'inactive'], default: 'active' },
+  telegramLink:  { type: String, default: '' },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Group', groupSchema);
