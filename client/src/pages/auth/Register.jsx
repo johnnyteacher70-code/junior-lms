@@ -8,24 +8,19 @@ import Button from '../../components/ui/Button';
 const roleLabels = { student: 'Talaba', teacher: "O'qituvchi", admin: 'Administrator' };
 
 export default function Register() {
-  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'student', adminCode: '' });
+  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'student', adminCode: '', teacherCode: '' });
   const [loading, setLoading] = useState(false);
-  const [showAdminCode, setShowAdminCode] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleRoleSelect = (r) => {
-    if (r === 'admin') {
-      setShowAdminCode(true);
-    } else {
-      setShowAdminCode(false);
-    }
-    setForm({ ...form, role: r, adminCode: '' });
+    setForm({ ...form, role: r, adminCode: '', teacherCode: '' });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.password.length < 6) return toast.error("Parol kamida 6 ta belgidan iborat bo'lishi kerak");
+    if (form.role === 'teacher' && !form.teacherCode) return toast.error("O'qituvchi kodi kiritilmagan");
     if (form.role === 'admin' && !form.adminCode) return toast.error("Admin kodi kiritilmagan");
     setLoading(true);
     try {
@@ -142,6 +137,23 @@ export default function Register() {
                   </button>
                 </div>
               </div>
+
+              {/* O'qituvchi kodi (faqat teacher tanlanganda) */}
+              {form.role === 'teacher' && (
+                <div className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
+                  <Input
+                    label="O'qituvchi kodi"
+                    type="password"
+                    placeholder="Maxfiy kod..."
+                    value={form.teacherCode}
+                    onChange={(e) => setForm({ ...form, teacherCode: e.target.value })}
+                    required
+                  />
+                  <p className="text-xs text-gray-400 mt-1">
+                    O'qituvchi kodi faqat vakolatli shaxslarga beriladi
+                  </p>
+                </div>
+              )}
 
               {/* Admin kodi (faqat admin tanlanganda) */}
               {form.role === 'admin' && (
