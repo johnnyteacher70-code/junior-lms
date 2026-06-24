@@ -8,8 +8,7 @@ import DashboardLayout from './components/layout/DashboardLayout';
 import LandingPage from './pages/LandingPage';
 import CoursesPage from './pages/CoursesPage';
 import CourseDetail from './pages/CourseDetail';
-import Login from './pages/auth/Login';
-import Register from './pages/auth/Register';
+import Auth from './pages/auth/Auth';
 
 import StudentDashboard from './pages/student/Dashboard';
 import MyCourses from './pages/student/MyCourses';
@@ -54,8 +53,8 @@ export default function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/courses" element={<CoursesPage />} />
       <Route path="/courses/:id" element={<CourseDetail />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route path="/login"    element={<Auth initialTab="login" />} />
+      <Route path="/register" element={<Auth initialTab="signup" />} />
 
       {/* Student */}
       <Route path="/student" element={<StudentLayout><StudentDashboard /></StudentLayout>} />
