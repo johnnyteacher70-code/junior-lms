@@ -13,14 +13,7 @@ exports.register = async (req, res, next) => {
     const { name, email, password, role } = req.body;
     const exists = await User.findOne({ email });
     if (exists) return res.status(400).json({ success: false, message: 'Email already registered' });
-    const adminSecret = process.env.ADMIN_SECRET || 'junior-admin-2026';
-    const teacherSecret = process.env.TEACHER_SECRET || 'junior-teacher-2026';
-    let safeRole = 'student';
-    if (role === 'teacher' && req.body.teacherCode === teacherSecret) safeRole = 'teacher';
-    else if (role === 'teacher') return res.status(403).json({ success: false, message: "O'qituvchi kodi noto'g'ri" });
-    if (role === 'admin' && req.body.adminCode === adminSecret) safeRole = 'admin';
-    else if (role === 'admin') return res.status(403).json({ success: false, message: 'Admin kodi noto\'g\'ri' });
-    const user = await User.create({ name, email, password, role: safeRole });
+    const user = await User.create({ name, email, password, role: 'student' });
     sendToken(user, 201, res);
   } catch (err) { next(err); }
 };

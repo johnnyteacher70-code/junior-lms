@@ -5,28 +5,20 @@ import { useAuth } from '../../hooks/useAuth';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 
-const roleLabels = { student: 'Talaba', teacher: "O'qituvchi", admin: 'Administrator' };
-
 export default function Register() {
-  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'student', adminCode: '', teacherCode: '' });
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  const handleRoleSelect = (r) => {
-    setForm({ ...form, role: r, adminCode: '', teacherCode: '' });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.password.length < 6) return toast.error("Parol kamida 6 ta belgidan iborat bo'lishi kerak");
-    if (form.role === 'teacher' && !form.teacherCode) return toast.error("O'qituvchi kodi kiritilmagan");
-    if (form.role === 'admin' && !form.adminCode) return toast.error("Admin kodi kiritilmagan");
     setLoading(true);
     try {
-      const user = await register(form);
+      const user = await register({ ...form, role: 'student' });
       toast.success(`Hisob yaratildi! Xush kelibsiz, ${user.name}!`);
-      navigate(`/${user.role}`);
+      navigate('/student');
     } catch (err) {
       toast.error(err.response?.data?.message || "Ro'yxatdan o'tish muvaffaqiyatsiz bo'ldi");
     } finally {
@@ -36,6 +28,7 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex bg-gray-50 dark:bg-gray-950">
+      {/* Chap panel */}
       <div className="hidden lg:flex flex-1 bg-gradient-to-br from-primary-600 to-purple-700 items-center justify-center p-12">
         <div className="text-white max-w-md">
           <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center mb-6">
@@ -44,21 +37,23 @@ export default function Register() {
             </svg>
           </div>
           <h1 className="text-4xl font-bold mb-4">Bugun Junior-ga qo'shiling</h1>
-          <p className="text-white/80 text-lg">Rolingizni tanlang va o'rganish yo'lini boshlang.</p>
-          <div className="mt-8 grid grid-cols-2 gap-4">
+          <p className="text-white/80 text-lg">Ro'yxatdan o'ting va o'rganish yo'lini boshlang.</p>
+          <div className="mt-8 space-y-4">
             {[
-              { title: 'Talaba sifatida', desc: 'Kurslarga yoziling, rivojlanishni kuzating, topshiriqlar yuboring' },
-              { title: "O'qituvchi sifatida", desc: 'Kurslar yarating, darslarni boshqaring, talabalarni baholang' },
-            ].map((r) => (
-              <div key={r.title} className="bg-white/10 rounded-xl p-4">
-                <p className="font-semibold">{r.title}</p>
-                <p className="text-white/70 text-sm mt-1">{r.desc}</p>
+              { icon: '📚', text: "Yuzlab kurslarga kirish imkoniyati" },
+              { icon: '📈', text: "O'z rivojlanishingizni kuzating" },
+              { icon: '✅', text: "Topshiriqlarni bajaring va baholar oling" },
+            ].map((item) => (
+              <div key={item.text} className="flex items-center gap-3 bg-white/10 rounded-xl px-4 py-3">
+                <span className="text-xl">{item.icon}</span>
+                <p className="text-white/90 text-sm">{item.text}</p>
               </div>
             ))}
           </div>
         </div>
       </div>
 
+      {/* O'ng panel — forma */}
       <div className="flex-1 flex items-center justify-center p-6">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
@@ -71,7 +66,7 @@ export default function Register() {
               <span className="font-bold text-xl text-gray-900 dark:text-white">Junior</span>
             </Link>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Hisobingizni yarating</h2>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">Bugun o'rganishni yoki o'qitishni boshlang</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">Bugun o'rganishni boshlang</p>
           </div>
 
           <div className="card p-8">
@@ -100,80 +95,8 @@ export default function Register() {
                 required
               />
 
-              {/* Rol tanlash */}
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Quyidagi sifatida ro'yxatdan o'tmoqchiman
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  {['student', 'teacher'].map((r) => (
-                    <button
-                      key={r}
-                      type="button"
-                      onClick={() => handleRoleSelect(r)}
-                      className={`py-3 px-4 rounded-lg border-2 text-sm font-medium transition-colors ${
-                        form.role === r
-                          ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400'
-                          : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-300'
-                      }`}
-                    >
-                      {roleLabels[r]}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Admin tugmasi — kichik, ko'zga tashlanmaydi */}
-                <div className="flex justify-end">
-                  <button
-                    type="button"
-                    onClick={() => handleRoleSelect(form.role === 'admin' ? 'student' : 'admin')}
-                    className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
-                      form.role === 'admin'
-                        ? 'border-gray-700 bg-gray-800 text-gray-300 dark:border-gray-500'
-                        : 'border-gray-200 dark:border-gray-700 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
-                    }`}
-                  >
-                    {form.role === 'admin' ? '✕ Adminni bekor qilish' : 'Administrator'}
-                  </button>
-                </div>
-              </div>
-
-              {/* O'qituvchi kodi (faqat teacher tanlanganda) */}
-              {form.role === 'teacher' && (
-                <div className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
-                  <Input
-                    label="O'qituvchi kodi"
-                    type="password"
-                    placeholder="Maxfiy kod..."
-                    value={form.teacherCode}
-                    onChange={(e) => setForm({ ...form, teacherCode: e.target.value })}
-                    required
-                  />
-                  <p className="text-xs text-gray-400 mt-1">
-                    O'qituvchi kodi faqat vakolatli shaxslarga beriladi
-                  </p>
-                </div>
-              )}
-
-              {/* Admin kodi (faqat admin tanlanganda) */}
-              {form.role === 'admin' && (
-                <div className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
-                  <Input
-                    label="Admin kodi"
-                    type="password"
-                    placeholder="Maxfiy kod..."
-                    value={form.adminCode}
-                    onChange={(e) => setForm({ ...form, adminCode: e.target.value })}
-                    required
-                  />
-                  <p className="text-xs text-gray-400 mt-1">
-                    Admin kodi faqat vakolatli shaxslarga beriladi
-                  </p>
-                </div>
-              )}
-
               <Button type="submit" className="w-full" size="lg" loading={loading}>
-                {form.role === 'admin' ? 'Admin hisob yaratish' : 'Hisob yaratish'}
+                Hisob yaratish
               </Button>
             </form>
           </div>

@@ -76,6 +76,24 @@ exports.deleteUser = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
+exports.createUser = async (req, res, next) => {
+  try {
+    const { name, email, password, role } = req.body;
+    if (!name || !email || !password) {
+      return res.status(400).json({ success: false, message: 'Ism, email va parol majburiy' });
+    }
+    if (!['student', 'teacher', 'admin'].includes(role)) {
+      return res.status(400).json({ success: false, message: "Rol noto'g'ri" });
+    }
+    const exists = await User.findOne({ email });
+    if (exists) return res.status(400).json({ success: false, message: 'Bu email allaqachon ro\'yxatdan o\'tgan' });
+    const user = await User.create({ name, email, password, role });
+    const u = user.toObject();
+    delete u.password;
+    res.status(201).json({ success: true, user: u });
+  } catch (err) { next(err); }
+};
+
 exports.getCourses = async (req, res, next) => {
   try {
     const courses = await Course.find().populate('instructor', 'name email').sort('-createdAt');
