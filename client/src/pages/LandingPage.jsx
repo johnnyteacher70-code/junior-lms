@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   GraduationCap, ArrowRight, Play, TrendingUp, Award, LayoutGrid,
@@ -121,7 +121,7 @@ export default function LandingPage() {
           </a>
 
           {/* desktop links */}
-          <div className="landing-desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: 30 }}>
+          <div className="hidden lg:flex items-center" style={{ gap: 30 }}>
             {NAV_LINKS.map((l) => (
               <a key={l.label} href={l.href} style={{ textDecoration: 'none', color: '#475569', fontWeight: 600, fontSize: 15, transition: 'color .2s' }}
                 onMouseEnter={(e) => (e.target.style.color = '#4F46E5')}
@@ -132,18 +132,18 @@ export default function LandingPage() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <Link to="/login" className="landing-desktop-nav" style={{ textDecoration: 'none', color: '#0F172A', fontWeight: 600, fontSize: 15, padding: '10px 16px', borderRadius: 12, transition: 'background .2s' }}
+            <Link to="/login" className="hidden lg:block" style={{ textDecoration: 'none', color: '#0F172A', fontWeight: 600, fontSize: 15, padding: '10px 16px', borderRadius: 12, transition: 'background .2s' }}
               onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(15,23,42,0.04)')}
               onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}>
               Kirish
             </Link>
-            <Link to="/register" style={{ textDecoration: 'none', color: '#fff', fontWeight: 700, fontSize: 15, padding: '11px 20px', borderRadius: 12, background: 'linear-gradient(135deg,#4F46E5,#7C3AED)', boxShadow: '0 10px 24px rgba(79,70,229,0.32)', transition: 'transform .2s,box-shadow .2s', display: 'inline-block' }}
+            <Link to="/register" className="hidden sm:inline-block" style={{ textDecoration: 'none', color: '#fff', fontWeight: 700, fontSize: 15, padding: '11px 20px', borderRadius: 12, background: 'linear-gradient(135deg,#4F46E5,#7C3AED)', boxShadow: '0 10px 24px rgba(79,70,229,0.32)', transition: 'transform .2s,box-shadow .2s' }}
               onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 14px 30px rgba(79,70,229,0.42)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 10px 24px rgba(79,70,229,0.32)'; }}>
               Bepul boshlash
             </Link>
-            <button className="landing-mobile-btn" onClick={() => setMobileOpen((v) => !v)}
-              style={{ display: 'none', alignItems: 'center', justifyContent: 'center', width: 42, height: 42, borderRadius: 12, border: '1px solid rgba(15,23,42,0.08)', background: '#fff', cursor: 'pointer', color: '#0F172A' }}>
+            <button className="flex lg:hidden" onClick={() => setMobileOpen((v) => !v)}
+              style={{ alignItems: 'center', justifyContent: 'center', width: 42, height: 42, borderRadius: 12, border: '1px solid rgba(15,23,42,0.08)', background: '#fff', cursor: 'pointer', color: '#0F172A' }}>
               {mobileOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
@@ -164,7 +164,7 @@ export default function LandingPage() {
       {/* ══════════════ HERO ══════════════ */}
       <section id="top" style={{ position: 'relative', padding: '72px 0 88px', background: 'radial-gradient(900px 520px at 85% -10%,rgba(124,58,237,0.14),transparent 60%),radial-gradient(760px 520px at 5% 10%,rgba(6,182,212,0.12),transparent 55%),radial-gradient(800px 600px at 50% 120%,rgba(79,70,229,0.10),transparent 60%),#F8FAFC', overflow: 'hidden' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
-          <div className="landing-hero-grid" style={{ display: 'grid', gridTemplateColumns: '1.02fr 0.98fr', gap: 56, alignItems: 'center' }}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 items-center" style={{ gap: 56 }}>
             {/* copy */}
             <div style={{ animation: 'fadeUp .7s ease both' }}>
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '7px 14px', borderRadius: 999, background: 'rgba(79,70,229,0.08)', border: '1px solid rgba(79,70,229,0.16)', color: '#4F46E5', fontWeight: 700, fontSize: 13 }}>
@@ -206,7 +206,7 @@ export default function LandingPage() {
             </div>
 
             {/* dashboard mockup */}
-            <div className="landing-hero-mock" style={{ position: 'relative', animation: 'fadeUp .7s .12s ease both' }}>
+            <div className="hidden lg:block" style={{ position: 'relative', animation: 'fadeUp .7s .12s ease both' }}>
               <div style={{ position: 'absolute', inset: -30, background: 'radial-gradient(closest-side,rgba(124,58,237,0.18),transparent)', filter: 'blur(20px)', zIndex: 0 }} />
               <div style={{ position: 'relative', zIndex: 2, borderRadius: 24, background: 'rgba(255,255,255,0.78)', backdropFilter: 'blur(14px)', border: '1px solid rgba(255,255,255,0.9)', boxShadow: '0 30px 70px rgba(30,27,75,0.22)', overflow: 'hidden' }}>
                 {/* top bar */}
@@ -328,7 +328,7 @@ export default function LandingPage() {
             <h2 style={{ fontFamily: "'Space Grotesk'", fontWeight: 700, fontSize: 'clamp(30px,3.8vw,46px)', letterSpacing: '-0.025em', margin: '12px 0 0', color: '#0F172A' }}>5 ta oddiy qadamda</h2>
             <p style={{ fontSize: 18, color: '#475569', lineHeight: 1.6, margin: '14px 0 0' }}>Ro'yxatdan o'tishdan sertifikatgacha — aniq va tushunarli yo'l.</p>
           </div>
-          <div className="landing-process-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 18, marginTop: 50 }}>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5" style={{ gap: 18, marginTop: 50 }}>
             {STEPS.map((s) => (
               <div key={s.n} style={{ position: 'relative', textAlign: 'center', padding: '26px 16px', borderRadius: 20, background: '#fff', border: '1px solid rgba(15,23,42,0.06)', boxShadow: '0 10px 26px rgba(30,27,75,0.05)' }}>
                 <div style={{ width: 54, height: 54, margin: '0 auto', borderRadius: '50%', background: 'linear-gradient(135deg,#4F46E5,#7C3AED)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Space Grotesk'", fontWeight: 700, fontSize: 21, color: '#fff', boxShadow: '0 10px 22px rgba(79,70,229,0.3)' }}>{s.n}</div>
@@ -498,22 +498,6 @@ export default function LandingPage() {
         </div>
       </footer>
 
-      {/* responsive styles */}
-      <style>{`
-        .landing-desktop-nav { display: flex !important; }
-        .landing-mobile-btn  { display: none !important; }
-        .landing-hero-grid   { grid-template-columns: 1.02fr 0.98fr !important; }
-        .landing-process-grid { grid-template-columns: repeat(5,1fr) !important; }
-        @media (max-width: 860px) {
-          .landing-desktop-nav { display: none !important; }
-          .landing-mobile-btn  { display: flex !important; }
-          .landing-hero-grid   { grid-template-columns: 1fr !important; }
-          .landing-hero-mock   { margin-top: 8px; }
-        }
-        @media (max-width: 640px) {
-          .landing-process-grid { grid-template-columns: 1fr 1fr !important; }
-        }
-      `}</style>
     </div>
   );
 }

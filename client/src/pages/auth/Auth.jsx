@@ -112,22 +112,12 @@ export default function Auth({ initialTab = 'login' }) {
   const EyeIcon = showPw ? EyeOff : Eye;
 
   return (
-    <div style={{ minHeight: '100vh', display: 'grid', gridTemplateColumns: '1.05fr 1fr', fontFamily: "'Plus Jakarta Sans',sans-serif", color: '#0F172A', WebkitFontSmoothing: 'antialiased' }}
-      className="auth-grid">
-      <style>{KEYFRAMES}{`
-        .auth-grid { grid-template-columns: 1.05fr 1fr; }
-        .auth-brand { display: flex !important; }
-        .auth-mobile-logo { display: none !important; }
-        @media (max-width: 900px) {
-          .auth-grid { grid-template-columns: 1fr !important; }
-          .auth-brand { display: none !important; }
-          .auth-mobile-logo { display: flex !important; }
-        }
-        input::placeholder { color: #94A3B8; }
-      `}</style>
+    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2"
+      style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", color: '#0F172A', WebkitFontSmoothing: 'antialiased' }}>
+      <style>{KEYFRAMES}{`input::placeholder { color: #94A3B8; }`}</style>
 
       {/* ══════════ BRAND PANEL ══════════ */}
-      <div className="auth-brand" style={{ position: 'relative', overflow: 'hidden', padding: 48, flexDirection: 'column', justifyContent: 'space-between', background: 'radial-gradient(600px 360px at 18% 12%,rgba(6,182,212,0.45),transparent 60%),radial-gradient(620px 420px at 88% 92%,rgba(124,58,237,0.6),transparent 60%),linear-gradient(135deg,#4F46E5,#7C3AED)' }}>
+      <div className="hidden md:flex flex-col justify-between relative overflow-hidden" style={{ padding: 48, background: 'radial-gradient(600px 360px at 18% 12%,rgba(6,182,212,0.45),transparent 60%),radial-gradient(620px 420px at 88% 92%,rgba(124,58,237,0.6),transparent 60%),linear-gradient(135deg,#4F46E5,#7C3AED)' }}>
         {/* decorative circles */}
         <div style={{ position: 'absolute', width: 280, height: 280, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.16)', top: -90, right: -70 }} />
         <div style={{ position: 'absolute', width: 200, height: 200, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.14)', bottom: 60, left: -70 }} />
@@ -181,7 +171,7 @@ export default function Auth({ initialTab = 'login' }) {
         <div style={{ width: '100%', maxWidth: 420 }}>
 
           {/* mobile logo */}
-          <Link to="/" className="auth-mobile-logo" style={{ alignItems: 'center', gap: 10, textDecoration: 'none', justifyContent: 'center', marginBottom: 26 }}>
+          <Link to="/" className="flex md:hidden items-center justify-center" style={{ gap: 10, textDecoration: 'none', marginBottom: 26 }}>
             <span style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg,#4F46E5,#7C3AED)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', boxShadow: '0 8px 20px rgba(79,70,229,0.35)' }}>
               <GraduationCap size={21} />
             </span>
