@@ -213,8 +213,9 @@ export default function StudentDashboard() {
       <aside className="ds-sidebar"
         style={{ width: 264, flexShrink: 0, background: 'var(--sidebar)', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', padding: '22px 16px', position: 'fixed', top: 0, bottom: 0, left: 0, zIndex: 80, transition: 'transform .3s ease', transform: sidebarOpen ? 'translateX(0)' : undefined }}>
         <style>{`
+          .ds-main-wrap { margin-left:264px; }
           @media (min-width:921px) { .ds-sidebar { position:sticky !important; transform:none !important; } .ds-bottom-nav { display:none !important; } }
-          @media (max-width:920px) { .ds-sidebar { transform:translateX(-110%); } .ds-sidebar.open { transform:translateX(0) !important; } .ds-bottom-nav { display:flex !important; } .ds-right-col { display:none !important; } .ds-stat-grid { grid-template-columns:1fr 1fr !important; } }
+          @media (max-width:920px) { .ds-sidebar { transform:translateX(-110%); } .ds-sidebar.open { transform:translateX(0) !important; } .ds-bottom-nav { display:flex !important; } .ds-right-col { display:none !important; } .ds-stat-grid { grid-template-columns:1fr 1fr !important; } .ds-main-wrap { margin-left:0; padding-bottom:80px; } }
           @media (max-width:560px) { .ds-cont-grid { grid-template-columns:1fr !important; } }
           @media (max-width:1100px) { .ds-right-col { display:none !important; } .ds-main-grid { grid-template-columns:1fr !important; } }
         `}</style>
@@ -261,8 +262,7 @@ export default function StudentDashboard() {
       </aside>
 
       {/* ══════════ MAIN ══════════ */}
-      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', marginLeft: 264 }} className="ds-main-wrap">
-        <style>{`@media(max-width:920px){.ds-main-wrap{margin-left:0 !important;padding-bottom:80px;}}`}</style>
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }} className="ds-main-wrap">
 
         {/* HEADER */}
         <header style={{ position: 'sticky', top: 0, zIndex: 40, backdropFilter: 'saturate(180%) blur(16px)', WebkitBackdropFilter: 'saturate(180%) blur(16px)', background: isDark ? 'rgba(20,29,49,0.88)' : 'rgba(255,255,255,0.88)', borderBottom: '1px solid var(--border)' }}>
