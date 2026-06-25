@@ -45,25 +45,30 @@ const SHELL_MEDIA = `
 `;
 
 function getActiveLabel(path) {
-  if (path === '/student')                     return 'Dashboard';
-  if (path.startsWith('/student/assignments')) return 'Topshiriqlar';
-  if (path.startsWith('/student/group'))       return 'Guruhim';
-  if (path.startsWith('/student/profile'))     return 'Sozlamalar';
-  if (path.startsWith('/student/courses'))     return 'Mening kurslarim';
+  if (path === '/student')                      return 'Dashboard';
+  if (path.startsWith('/student/lessons'))      return 'Darslar';
+  if (path.startsWith('/student/assignments'))  return 'Topshiriqlar';
+  if (path.startsWith('/student/tests'))        return 'Testlar';
+  if (path.startsWith('/student/certificates')) return 'Sertifikatlar';
+  if (path.startsWith('/student/schedule'))     return 'Jadval';
+  if (path.startsWith('/student/messages'))     return 'Xabarlar';
+  if (path.startsWith('/student/group'))        return 'Guruhim';
+  if (path.startsWith('/student/profile'))      return 'Sozlamalar';
+  if (path.startsWith('/student/courses'))      return 'Mening kurslarim';
   return 'Dashboard';
 }
 
 const MENU = [
-  { label: 'Dashboard',        Icon: LayoutGrid,    to: '/student' },
-  { label: 'Mening kurslarim', Icon: BookOpen,      to: '/student/courses' },
-  { label: 'Darslar',          Icon: PlayCircle,    to: '/student/courses' },
-  { label: 'Topshiriqlar',     Icon: ClipboardList, to: '/student/assignments' },
-  { label: 'Testlar',          Icon: FileCheck2,    to: '/student/courses' },
-  { label: 'Sertifikatlar',    Icon: Award,         to: '/student/courses' },
-  { label: 'Jadval',           Icon: CalendarDays,  to: '/student/courses' },
-  { label: 'Xabarlar',        Icon: MessageSquare, to: '/student/courses', badge: 3 },
-  { label: 'Guruhim',          Icon: User,          to: '/student/group' },
-  { label: 'Sozlamalar',       Icon: Settings,      to: '/student/profile' },
+  { label: 'Dashboard',         Icon: LayoutGrid,    to: '/student' },
+  { label: 'Mening kurslarim',  Icon: BookOpen,      to: '/student/courses' },
+  { label: 'Darslar',           Icon: PlayCircle,    to: '/student/lessons' },
+  { label: 'Topshiriqlar',      Icon: ClipboardList, to: '/student/assignments' },
+  { label: 'Testlar',           Icon: FileCheck2,    to: '/student/tests' },
+  { label: 'Sertifikatlar',     Icon: Award,         to: '/student/certificates' },
+  { label: 'Jadval',            Icon: CalendarDays,  to: '/student/schedule' },
+  { label: 'Xabarlar',         Icon: MessageSquare, to: '/student/messages', badge: 3 },
+  { label: 'Guruhim',           Icon: User,          to: '/student/group' },
+  { label: 'Sozlamalar',        Icon: Settings,      to: '/student/profile' },
 ];
 
 const BOTTOM_NAV = [

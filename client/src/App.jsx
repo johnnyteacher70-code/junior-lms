@@ -10,12 +10,17 @@ import CoursesPage from './pages/CoursesPage';
 import CourseDetail from './pages/CourseDetail';
 import Auth from './pages/auth/Auth';
 
-import StudentDashboard from './pages/student/Dashboard';
-import MyCourses        from './pages/student/MyCourses';
-import CourseView       from './pages/student/CourseView';
-import StudentAssignments from './pages/student/Assignments';
-import StudentMyGroup   from './pages/student/MyGroup';
-import StudentProfile   from './pages/student/Profile';
+import StudentDashboard    from './pages/student/Dashboard';
+import MyCourses           from './pages/student/MyCourses';
+import CourseView          from './pages/student/CourseView';
+import StudentAssignments  from './pages/student/Assignments';
+import StudentMyGroup      from './pages/student/MyGroup';
+import StudentProfile      from './pages/student/Profile';
+import Lessons             from './pages/student/Lessons';
+import Tests               from './pages/student/Tests';
+import Certificates        from './pages/student/Certificates';
+import Schedule            from './pages/student/Schedule';
+import Messages            from './pages/student/Messages';
 
 import TeacherDashboard   from './pages/teacher/Dashboard';
 import TeacherMyCourses   from './pages/teacher/MyCourses';
@@ -60,12 +65,17 @@ export default function App() {
       <Route path="/register"  element={<Auth initialTab="signup" />} />
 
       {/* Student — all in StudentShell */}
-      <Route path="/student"             element={<RoleRoute role="student"><StudentDashboard /></RoleRoute>} />
-      <Route path="/student/courses"     element={<SShell><MyCourses /></SShell>} />
-      <Route path="/student/courses/:id" element={<SShell><CourseView /></SShell>} />
-      <Route path="/student/assignments" element={<SShell><StudentAssignments /></SShell>} />
-      <Route path="/student/group"       element={<SShell><StudentMyGroup /></SShell>} />
-      <Route path="/student/profile"     element={<SShell><StudentProfile /></SShell>} />
+      <Route path="/student"                  element={<RoleRoute role="student"><StudentDashboard /></RoleRoute>} />
+      <Route path="/student/courses"          element={<SShell><MyCourses /></SShell>} />
+      <Route path="/student/courses/:id"      element={<SShell><CourseView /></SShell>} />
+      <Route path="/student/lessons"          element={<SShell><Lessons /></SShell>} />
+      <Route path="/student/assignments"      element={<SShell><StudentAssignments /></SShell>} />
+      <Route path="/student/tests"            element={<SShell><Tests /></SShell>} />
+      <Route path="/student/certificates"     element={<SShell><Certificates /></SShell>} />
+      <Route path="/student/schedule"         element={<SShell><Schedule /></SShell>} />
+      <Route path="/student/messages"         element={<SShell><Messages /></SShell>} />
+      <Route path="/student/group"            element={<SShell><StudentMyGroup /></SShell>} />
+      <Route path="/student/profile"          element={<SShell><StudentProfile /></SShell>} />
 
       {/* Teacher */}
       <Route path="/teacher"                          element={<TeacherLayout><TeacherDashboard /></TeacherLayout>} />
