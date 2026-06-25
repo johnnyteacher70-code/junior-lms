@@ -57,7 +57,7 @@ export default function App() {
       <Route path="/register" element={<Auth initialTab="signup" />} />
 
       {/* Student */}
-      <Route path="/student" element={<StudentLayout><StudentDashboard /></StudentLayout>} />
+      <Route path="/student" element={<RoleRoute role="student"><StudentDashboard /></RoleRoute>} />
       <Route path="/student/courses" element={<StudentLayout><MyCourses /></StudentLayout>} />
       <Route path="/student/courses/:id" element={<StudentLayout><CourseView /></StudentLayout>} />
       <Route path="/student/assignments" element={<StudentLayout><StudentAssignments /></StudentLayout>} />
