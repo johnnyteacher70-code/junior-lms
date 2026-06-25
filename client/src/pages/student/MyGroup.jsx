@@ -1,17 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Users, GraduationCap, Send, ExternalLink, RefreshCw, BookOpen, CheckCircle2 } from 'lucide-react';
 import { getMyGroup } from '../../api/groups';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
-import Badge from '../../components/ui/Badge';
-import Button from '../../components/ui/Button';
 
 export default function StudentMyGroup() {
-  const [group, setGroup]         = useState(null);
-  const [loading, setLoading]     = useState(true);
+  const [group, setGroup]       = useState(null);
+  const [loading, setLoading]   = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const fetchGroup = (showSpinner = true) => {
-    if (showSpinner) setLoading(true);
+  const fetchGroup = (spinner = true) => {
+    if (spinner) setLoading(true);
     return getMyGroup()
       .then(r => setGroup(r.data.group))
       .catch(() => setGroup(null))
@@ -25,147 +23,161 @@ export default function StudentMyGroup() {
     return () => window.removeEventListener('focus', onFocus);
   }, []);
 
-  const handleRefresh = () => {
-    setRefreshing(true);
-    fetchGroup(false);
-  };
-
-  if (loading) return <LoadingSpinner />;
-
-  if (!group) return (
-    <div className="card p-16 text-center">
-      <div className="text-5xl mb-4">🏫</div>
-      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Siz hali guruhga biriktirilmagansiz</h3>
-      <p className="text-gray-500">Admin sizni guruhga qo'shgandan keyin bu yerda ko'rinadi</p>
+  if (loading) return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 300 }}>
+      <div style={{ width: 40, height: 40, border: '4px solid rgba(79,70,229,0.2)', borderTopColor: '#4F46E5', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+      <style>{'@keyframes spin{to{transform:rotate(360deg)}}'}</style>
     </div>
   );
 
+  if (!group) return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+      <h1 style={{ fontFamily: "'Space Grotesk'", fontWeight: 700, fontSize: 'clamp(20px,2.4vw,28px)', letterSpacing: '-0.02em', color: 'var(--text)', margin: 0 }}>Mening guruhim</h1>
+      <div style={{ borderRadius: 24, padding: '64px 24px', background: 'var(--surface)', border: '1px solid var(--border)', textAlign: 'center' }}>
+        <div style={{ width: 72, height: 72, borderRadius: 20, background: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 18px' }}>
+          <Users size={32} color="var(--text-mute)" />
+        </div>
+        <h3 style={{ fontFamily: "'Space Grotesk'", fontWeight: 700, fontSize: 20, color: 'var(--text)', margin: 0 }}>Siz hali guruhga biriktirilmagansiz</h3>
+        <p style={{ fontSize: 14.5, color: 'var(--text-soft)', margin: '10px auto 0', maxWidth: 360, lineHeight: 1.6 }}>
+          Admin sizni guruhga qo'shgandan keyin bu yerda guruh ma'lumotlari ko'rinadi.
+        </p>
+      </div>
+    </div>
+  );
+
+  const initials = group.name.charAt(0).toUpperCase();
+
   return (
-    <div className="space-y-6 max-w-2xl">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Mening guruhim</h1>
-        <button
-          onClick={handleRefresh}
-          disabled={refreshing}
-          className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-primary-600 transition-colors px-3 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
-        >
-          <svg className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24, maxWidth: 780 }}>
+
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <h1 style={{ fontFamily: "'Space Grotesk'", fontWeight: 700, fontSize: 'clamp(20px,2.4vw,28px)', letterSpacing: '-0.02em', color: 'var(--text)', margin: 0 }}>Mening guruhim</h1>
+          <p style={{ fontSize: 14, color: 'var(--text-soft)', margin: '4px 0 0' }}>{group.students.length} ta a'zo</p>
+        </div>
+        <button onClick={() => { setRefreshing(true); fetchGroup(false); }} disabled={refreshing}
+          style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '9px 16px', borderRadius: 12, border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-soft)', fontFamily: "'Plus Jakarta Sans'", fontWeight: 600, fontSize: 13.5, cursor: refreshing ? 'not-allowed' : 'pointer' }}>
+          <RefreshCw size={15} style={{ animation: refreshing ? 'spin .8s linear infinite' : 'none' }} />
           Yangilash
         </button>
       </div>
 
-      {/* Guruh kartochkasi */}
-      <div className="card overflow-hidden">
-        <div className="h-2 bg-gradient-to-r from-primary-500 to-purple-600" />
-        <div className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-purple-600 flex items-center justify-center text-white font-extrabold text-2xl shadow-glow-sm">
-                {group.name.charAt(0)}
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">{group.name}</h2>
-                {group.description && (
-                  <p className="text-sm text-gray-500 mt-0.5">{group.description}</p>
-                )}
-              </div>
-            </div>
-            <Badge color={group.status === 'active' ? 'green' : 'gray'} dot>
-              {group.status === 'active' ? 'Faol' : 'Nofaol'}
-            </Badge>
+      {/* Group card */}
+      <section style={{ borderRadius: 24, overflow: 'hidden', background: 'var(--surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow)' }}>
+        {/* Gradient top bar */}
+        <div style={{ height: 120, background: 'radial-gradient(500px 200px at 80% 50%,rgba(124,58,237,0.4),transparent 70%),linear-gradient(135deg,#4F46E5,#7C3AED)', position: 'relative', display: 'flex', alignItems: 'flex-end', padding: '0 28px 0' }}>
+          <div style={{ position: 'absolute', width: 180, height: 180, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.15)', top: -60, right: -40 }} />
+          <div style={{ width: 64, height: 64, borderRadius: 18, background: 'rgba(255,255,255,0.22)', backdropFilter: 'blur(8px)', border: '2px solid rgba(255,255,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Space Grotesk'", fontWeight: 700, fontSize: 28, color: '#fff', transform: 'translateY(32px)', boxShadow: '0 8px 24px rgba(0,0,0,0.2)' }}>
+            {initials}
           </div>
+          <div style={{ marginLeft: 16, paddingBottom: 12, transform: 'translateY(0)' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 10px', borderRadius: 99, background: group.status === 'active' ? 'rgba(34,197,94,0.9)' : 'rgba(100,116,139,0.9)', fontSize: 12, fontWeight: 700, color: '#fff' }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#fff', display: 'inline-block', animation: group.status === 'active' ? 'pulseDot 1.6s infinite' : 'none' }} />
+              {group.status === 'active' ? 'Faol' : 'Nofaol'}
+            </div>
+            <style>{'@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.4}}'}</style>
+          </div>
+        </div>
 
-          {/* Telegram */}
-          <div className="mb-4">
+        <div style={{ padding: '44px 28px 28px' }}>
+          <h2 style={{ fontFamily: "'Space Grotesk'", fontWeight: 700, fontSize: 22, color: 'var(--text)', margin: 0 }}>{group.name}</h2>
+          {group.description && (
+            <p style={{ fontSize: 14.5, color: 'var(--text-soft)', margin: '8px 0 0', lineHeight: 1.6 }}>{group.description}</p>
+          )}
+
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 22 }}>
+            {/* Telegram */}
             {group.telegramLink ? (
-              <a
-                href={group.telegramLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.28 13.604l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.868.955z"/></svg>
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wide">Telegram guruh</p>
-                    <p className="font-semibold text-gray-900 dark:text-white text-sm">Guruhga qo'shiling →</p>
-                  </div>
+              <a href={group.telegramLink} target="_blank" rel="noopener noreferrer"
+                style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 18px', borderRadius: 16, background: 'rgba(0,136,204,0.08)', border: '1px solid rgba(0,136,204,0.2)', textDecoration: 'none', transition: 'background .2s', flex: 1, minWidth: 200 }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0,136,204,0.14)')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0,136,204,0.08)')}>
+                <span style={{ width: 42, height: 42, borderRadius: 12, background: '#29A8E0', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Send size={18} color="#fff" />
+                </span>
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: '#29A8E0', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Telegram guruh</div>
+                  <div style={{ fontFamily: "'Space Grotesk'", fontWeight: 700, fontSize: 14.5, color: 'var(--text)', marginTop: 2 }}>Guruhga qo'shiling</div>
                 </div>
-                <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                <ExternalLink size={16} color="var(--text-mute)" style={{ marginLeft: 'auto', flexShrink: 0 }} />
               </a>
             ) : (
-              <div className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
-                <div className="w-10 h-10 rounded-xl bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.28 13.604l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.868.955z"/></svg>
-                </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 18px', borderRadius: 16, background: 'var(--surface-2)', border: '1px solid var(--border)', flex: 1, minWidth: 200 }}>
+                <span style={{ width: 42, height: 42, borderRadius: 12, background: 'var(--surface-3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Send size={18} color="var(--text-mute)" />
+                </span>
                 <div>
-                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Telegram guruh</p>
-                  <p className="text-sm text-gray-400">Havola hali qo'shilmagan</p>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-mute)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Telegram guruh</div>
+                  <div style={{ fontSize: 13.5, color: 'var(--text-soft)', marginTop: 2 }}>Havola hali qo'shilmagan</div>
                 </div>
               </div>
             )}
-          </div>
 
-          {/* Onlayn kurs */}
-          {group.course && (
-            <div className="p-4 bg-primary-50 dark:bg-primary-900/20 rounded-xl mb-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">📚</span>
-                <div>
-                  <p className="text-xs font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wide">Onlayn kurs</p>
-                  <p className="font-semibold text-gray-900 dark:text-white">{group.course.title}</p>
+            {/* Course */}
+            {group.course && (
+              <Link to={`/student/courses/${group.course._id}`}
+                style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 18px', borderRadius: 16, background: 'rgba(79,70,229,0.08)', border: '1px solid rgba(79,70,229,0.18)', textDecoration: 'none', flex: 1, minWidth: 200, transition: 'background .2s' }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(79,70,229,0.14)')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(79,70,229,0.08)')}>
+                <span style={{ width: 42, height: 42, borderRadius: 12, background: 'linear-gradient(135deg,#4F46E5,#7C3AED)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <BookOpen size={18} color="#fff" />
+                </span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: '#4F46E5', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Onlayn kurs</div>
+                  <div style={{ fontFamily: "'Space Grotesk'", fontWeight: 700, fontSize: 14.5, color: 'var(--text)', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{group.course.title}</div>
                 </div>
-              </div>
-              <Link to={`/courses/${group.course._id}`}>
-                <Button size="sm">O'rganish →</Button>
+                <ExternalLink size={16} color="#4F46E5" style={{ flexShrink: 0 }} />
               </Link>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* O'qituvchi */}
+      {/* Teacher */}
       {group.teacher && (
-        <div className="card p-5">
-          <h3 className="font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-            <span>👨‍🏫</span> O'qituvchi
-          </h3>
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center font-bold">
-              {group.teacher.name.charAt(0)}
+        <section style={{ borderRadius: 20, padding: 22, background: 'var(--surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow)' }}>
+          <h2 style={{ fontFamily: "'Space Grotesk'", fontWeight: 700, fontSize: 17, color: 'var(--text)', margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <GraduationCap size={18} color="#4F46E5" /> O'qituvchi
+          </h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', borderRadius: 16, background: 'var(--surface-2)' }}>
+            <div style={{ width: 48, height: 48, borderRadius: 14, background: 'linear-gradient(135deg,#4F46E5,#7C3AED)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontFamily: "'Space Grotesk'", fontWeight: 700, fontSize: 18, flexShrink: 0 }}>
+              {group.teacher.name.charAt(0).toUpperCase()}
             </div>
             <div>
-              <p className="font-semibold text-gray-900 dark:text-white">{group.teacher.name}</p>
-              <p className="text-sm text-gray-500">{group.teacher.email}</p>
+              <div style={{ fontFamily: "'Space Grotesk'", fontWeight: 700, fontSize: 16, color: 'var(--text)' }}>{group.teacher.name}</div>
+              <div style={{ fontSize: 13.5, color: 'var(--text-soft)', marginTop: 2 }}>{group.teacher.email}</div>
             </div>
+            <span style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 5, padding: '4px 12px', borderRadius: 99, background: 'rgba(79,70,229,0.10)', color: '#4F46E5', fontSize: 12.5, fontWeight: 700 }}>
+              <CheckCircle2 size={13} /> O'qituvchi
+            </span>
           </div>
-        </div>
+        </section>
       )}
 
-      {/* Guruh do'stlari */}
-      <div className="card p-5">
-        <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-          <span>🎓</span> Guruh a'zolari
-          <Badge color="primary">{group.students.length}</Badge>
-        </h3>
-        <div className="grid gap-2">
+      {/* Members */}
+      <section style={{ borderRadius: 20, background: 'var(--surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow)', overflow: 'hidden' }}>
+        <div style={{ padding: '20px 22px 16px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <h2 style={{ fontFamily: "'Space Grotesk'", fontWeight: 700, fontSize: 17, color: 'var(--text)', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Users size={17} color="#4F46E5" /> Guruh a'zolari
+          </h2>
+          <span style={{ padding: '3px 10px', borderRadius: 99, background: 'rgba(79,70,229,0.10)', color: '#4F46E5', fontSize: 12.5, fontWeight: 700 }}>{group.students.length}</span>
+        </div>
+        <div style={{ padding: '8px 12px' }}>
           {group.students.map((s, i) => (
-            <div key={s._id} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/40 transition-colors">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-400 to-primary-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
-                {i + 1}
-              </div>
-              <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 flex items-center justify-center font-bold text-sm flex-shrink-0">
+            <div key={s._id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 10px', borderRadius: 12, transition: 'background .18s' }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-2)')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}>
+              <span style={{ width: 26, height: 26, borderRadius: 8, background: 'linear-gradient(135deg,#4F46E5,#7C3AED)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 11, fontWeight: 700, flexShrink: 0 }}>{i + 1}</span>
+              <div style={{ width: 36, height: 36, borderRadius: 10, background: 'var(--surface-2)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Space Grotesk'", fontWeight: 700, fontSize: 15, color: 'var(--text)', flexShrink: 0 }}>
                 {s.name.charAt(0).toUpperCase()}
               </div>
-              <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{s.name}</span>
+              <span style={{ fontSize: 14.5, fontWeight: 600, color: 'var(--text)' }}>{s.name}</span>
             </div>
           ))}
         </div>
-      </div>
+      </section>
+      <style>{'@keyframes spin{to{transform:rotate(360deg)}}'}</style>
     </div>
   );
 }
